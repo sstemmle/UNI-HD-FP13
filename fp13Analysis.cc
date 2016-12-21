@@ -181,10 +181,11 @@ int fp13Analysis::readEvent()
 					detectorHitMask.size() << " delay " <<
 					delay << " deltaData " << deltadata <<
 					"." << endl;
-
-			if (delay <= 20){ 
-				detectorHitMask[detectorHitMask.size() - 2] = detectorHitMask[detectorHitMask.size() - 2] ^ hitMask;
+      //Wenn signale 40ns oder naeher zusammenliegen werden sie zusammengefuegt (endl. Zeitaufloesung)
+			if (delay <= 40){ 
+				detectorHitMask[detectorHitMask.size() - 2] = detectorHitMask[detectorHitMask.size() - 2] | hitMask;
 				detectorHitMask.pop_back();
+				detectorHitTimes.pop_back();
 				merged++;
 			}
 		}
@@ -240,10 +241,6 @@ void fp13Analysis::analyze()
 	// Fuelle Histogramm mit der Anzahl der Zeitbins, die einen Hit
 	// enthalten
 	h6->Fill(detectorHitMask.size());
-
-	// Zusammenfuegen von Hits, die in zwei benachbarten Zeitbins
-	// liegen, aber nur ein Zeitdifferenz von 10 ns haben
-	mergeHitsWithSmallTimeDifference();
 
 	// Loop ueber alle Detektorlagen
 	for (int iDetectorLayer = 0; iDetectorLayer < nLayers;
@@ -465,46 +462,6 @@ void fp13Analysis::bookHistograms()
 }
 
 
-// Funktion zum Zusammenfassen von Hits, die nur 10 ns auseinander liegen
-void fp13Analysis::mergeHitsWithSmallTimeDifference()
-{
-	// falls das Event keine Daten enthaelt, sind wir fertig
-	if (detectorHitMask.empty())
-	    return;
-	// Loope vom zweiten bis zum letzten Zeitbin
-	// Iteratoren zeigen auf die Elemente eines "Datenbehaelters"
-	// (engl: container), in unserem Fall ein vector<int>,
-	vector<int>::iterator jt = detectorHitTimes.begin() + 1;
-	for (vector<int>::iterator it = detectorHitMask.begin() + 1;
-			detectorHitMask.end() != it; ) {
-		// Teste, ob der Hit aus aktuellem Zeitbin nur eine
-		// TDC-Zeiteinheit (10 ns) Unterschied zum Hit im naechsten
-		// Zeitbin hat
-		if ((*jt  - *(jt - 1)) > 10 || (*it & *(it - 1))) {
-			// mehr als 10 ns, also nur zum naechsten Zeitbin
-			// gehen
-			++it;
-			++jt;
-		} else {
-			// ja, Unterschied ist nur 10 ns, also werden die zwei
-			// Zeitbins zusammengelegt (d.h. der Myon-Durchgang
-			// faellt genau auf die Ecke eines TDC-Zeitbins)
-
-			// Fuege die beiden Bitmasken der Detektorhits mit
-			// einem bitweisen ODER (|) zusammen und speichere
-			// sie im aktuellen bin
-			*(it - 1) |= *it;
-			// als Zeitstempel wird der vom frueheren Bin
-			// verwendet, da der naeher an der Gesamtzeit
-			// liegt, d.h. *(jt - 1) bleibt, wie es ist
-
-			// Elemente loeschen - erase gibt Iterator auf Element
-			// hinter dem geloeschten zurueck
-			it = detectorHitMask.erase(it);
-			jt = detectorHitTimes.erase(jt);
-		}
-	}
-}
 
 // Bestimmung der letzten Detektorlage, die vom einlaufenden Myon beim
 // kontinuierlichen Durchlaufen getroffen wurde

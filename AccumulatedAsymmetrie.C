@@ -27,7 +27,7 @@ double fitFuncAsymmetrie(double *x, double *par)
 	// par[1] - P * A
 	// par[2] - muon Lamor frequency in (ns)^(-1)
 	// par[3] - phase
-	return par[0] + par[1] * TMath::Cos(x[0] * par[2] + par[3]);
+	return par[0] + par[1]/2.0 * TMath::Cos(x[0] * par[2] + par[3]);
 }
 
 TF1* getFitFunction()
@@ -123,12 +123,16 @@ void Asymmetrie(double xmin = 3e2, double xmax = 2e4)
 	asymUAll->Divide(usum);
 
 	// oben/unten kombinieren
-	TH1D *asymAll = (TH1D*) asymUAll->Clone();
-	asymAll->SetNameTitle("asymAll", "Alle Gruppen: Asymmetrie im Zerfall");
+  TH1D *diff = (TH1D*) udiff->Clone();
+  TH1D *sum  = (TH1D*) usum->Clone();
 	// Ist Ihnen klar, warum in der naechsten Zeile abgezogen wird?
 	// Ueberlegen Sie sich dazu, positive/negative Myonen eine Vor-
 	// zugszerfallsrichtung haben, bevor sie ins Magnetfeld kommen.
-	asymAll->Add(asymOAll, -1.0);
+  diff->Add(odiff,-1);
+  sum->Add(osum,1);
+	TH1D *asymAll = (TH1D*) diff->Clone();
+	asymAll->SetNameTitle("asymAll", "Alle Gruppen: Asymmetrie im Zerfall");
+	asymAll->Divide(sum);
 
 	// Jetzt wird gefittet
 	cout << endl << string(72, '*') << endl << asymOAll->GetTitle() <<
