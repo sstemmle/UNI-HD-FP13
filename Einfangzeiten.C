@@ -18,6 +18,9 @@
 
 using namespace std;
 
+// Anzahl der benutzten Detektorlagen
+const int nLayers = 6;
+
 // Hilfsfunktionen
 double getAfterpulseScaleFactor(int scintNr, bool up, TH1D* h8)
 {

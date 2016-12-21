@@ -17,6 +17,9 @@
 
 using namespace std;
 
+// Anzahl der benutzten Detektorlagen
+const int nLayers = 6;
+
 ////////////////////////////////////////////////////////////////////////
 // Hifsfunktionen
 ////////////////////////////////////////////////////////////////////////
@@ -132,10 +135,10 @@ void Asymmetrie(double xmin = 3e2, double xmax = 2e4,
 
 	// Histogramme mit B-Feld haben ein 'm' im Namen, diejenigen
 	// ohne nicht
-	TH1D *a[8], *b[8], *x[8], *am[8], *bm[8], *xm[8];
+	TH1D *a[nLayers], *b[nLayers], *x[nLayers], *am[nLayers], *bm[nLayers], *xm[nLayers];
 	TH1D *h8 = (TH1D*) fob->Get("h8");
 	TH1D *hm8 = (TH1D*) fmb->Get("h8");
-	for (int i = 0; i < 8; ++i) {
+	for (int i = 0; i < nLayers; ++i) {
 		a[i] = (TH1D*) fob->Get(Form("a%d", i));
 		b[i] = (TH1D*) fob->Get(Form("b%d", i));
 		x[i] = (TH1D*) fob->Get(Form("x%d", i));
@@ -149,7 +152,7 @@ void Asymmetrie(double xmin = 3e2, double xmax = 2e4,
 	////////////////////////////////////////////////////////////////
 	// Nachpulskorrektur
 	////////////////////////////////////////////////////////////////
-	for (int i = 1; i < 7; ++i) {
+	for (int i = 1; i < nLayers-1; ++i) {
 		// ohne B-Feld
 		a[i]->Add(x[i], - getAfterpulseScaleFactor(i, true, h8));
 		b[i]->Add(x[i], - getAfterpulseScaleFactor(i, false, h8));
@@ -181,15 +184,15 @@ void Asymmetrie(double xmin = 3e2, double xmax = 2e4,
 	ho->Add(a[2], 1.0);	hu->Add(b[2], 1.0);
 	ho->Add(a[3], 1.0);	hu->Add(b[3], 1.0);
 	ho->Add(a[4], 1.0);	hu->Add(b[4], 1.0);
-	ho->Add(a[5], 1.0);	hu->Add(b[5], 1.0);
-	ho->Add(a[6], 1.0);	hu->Add(b[6], 1.0);
+	//ho->Add(a[5], 1.0);	hu->Add(b[5], 1.0);
+	//ho->Add(a[6], 1.0);	hu->Add(b[6], 1.0);
 	// dann mit B-Feld
 	hmo->Add(am[1], 1.0);
 	hmo->Add(am[2], 1.0);	hmu->Add(bm[2], 1.0);
 	hmo->Add(am[3], 1.0);	hmu->Add(bm[3], 1.0);
 	hmo->Add(am[4], 1.0);	hmu->Add(bm[4], 1.0);
-	hmo->Add(am[5], 1.0);	hmu->Add(bm[5], 1.0);
-	hmo->Add(am[6], 1.0);	hmu->Add(bm[6], 1.0);
+	//hmo->Add(am[5], 1.0);	hmu->Add(bm[5], 1.0);
+	//hmo->Add(am[6], 1.0);	hmu->Add(bm[6], 1.0);
 	// Resultate speichern
 	fout->WriteTObject(ho);
 	fout->WriteTObject(hu);

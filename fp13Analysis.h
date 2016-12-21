@@ -159,9 +159,6 @@ protected:
 	// wird im Konstruktor aufgerufen, daher nicht virtuell
 	void bookHistograms();
 
-	// Zusammenfassung von Hits, die nur 10 ns auseinander liegen
-	virtual void mergeHitsWithSmallTimeDifference();
-
 	// Bestimmung der letzten Detektorlage, die vom einlaufenden Myon
 	// beim kontinuierlichen Durchlaufen des Detektors getroffen wurde
 	// setzt lastMuonLayer (s. o.)
