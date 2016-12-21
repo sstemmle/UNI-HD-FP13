@@ -42,7 +42,7 @@ double getAfterpulseScaleFactor(int scintNr, bool up, TH1D* h8)
 
 // die Fitfunktion selbst bekommt eine Koordinate x[0] und einen Satz von
 // Parametern (im Array par) und gibt einen reellen Wert zurueck
-double fitFunc(double *x, double *par)
+double fitFuncF(double *x, double *par)
 {
 	// par[0] background level
 	// par[1] number of muons
@@ -56,7 +56,7 @@ TF1* setFitFunction()
 {
 	// TF1(name, funktion, xmin, xmax, npar)
 	TF1 *fitFunc = new TF1("MuonLifetime",
-			fitFunc, 0., 20000., 3);
+			fitFuncF, 0., 20000., 3);
 	// Parameter mit Namen versehen
 	fitFunc->SetParName(0, "BG");
 	fitFunc->SetParName(1, "# #mu");

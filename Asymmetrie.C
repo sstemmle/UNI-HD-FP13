@@ -27,7 +27,7 @@ double fitFuncAsymmetrie(double *x, double *par)
 	// par[1] - P * A
 	// par[2] - muon Lamor frequency in (ns)^(-1)
 	// par[3] - phase
-	return par[0] + par[1] * TMath::Cos(x[0] * par[2] + par[3]);
+	return par[0] + par[1]/2.0 * TMath::Cos(x[0] * par[2] + par[3]);
 }
 
 TF1* getFitFunction()
@@ -151,15 +151,15 @@ void Asymmetrie(double xmin = 3e2, double xmax = 2e4,
 	////////////////////////////////////////////////////////////////
 	for (int i = 1; i < 7; ++i) {
 		// ohne B-Feld
-		a[i]->Add(x[i], getAfterpulseScaleFactor(i, true, h8));
-		b[i]->Add(x[i], getAfterpulseScaleFactor(i, false, h8));
+		a[i]->Add(x[i], - getAfterpulseScaleFactor(i, true, h8));
+		b[i]->Add(x[i], - getAfterpulseScaleFactor(i, false, h8));
 		// das selbe nocheinmal mit B-Feld
 		// da sich die Korrekturfaktoren fuer die Messung mit
 		// und ohne B-Feld unterscheiden werden, werden negative
 		// Szintillatornummern als Zeichen dafuer ubergeben, dass
 		// die Korrekturfaktoren mit B-Feld gewuenscht werden
-		am[i]->Add(xm[i], getAfterpulseScaleFactor(-i, true, hm8));
-		bm[i]->Add(xm[i], getAfterpulseScaleFactor(-i, false, hm8));
+		am[i]->Add(xm[i], - getAfterpulseScaleFactor(-i, true, hm8));
+		bm[i]->Add(xm[i], - getAfterpulseScaleFactor(-i, false, hm8));
 	}
 
 	////////////////////////////////////////////////////////////////
@@ -222,12 +222,16 @@ void Asymmetrie(double xmin = 3e2, double xmax = 2e4,
 	asymU->Divide(usum);
 
 	// oben/unten kombinieren
-	TH1D *asym = (TH1D*) asymU->Clone();
-	asym->SetNameTitle("asym", "Asymmetrie im Zerfall");
+  TH1D *diff = (TH1D*) udiff->Clone();
+  TH1D *sum  = (TH1D*) usum->Clone();
 	// Ist Ihnen klar, warum in der naechsten Zeile abgezogen wird?
 	// Ueberlegen Sie sich dazu, positive/negative Myonen eine Vor-
 	// zugszerfallsrichtung haben, bevor sie ins Magnetfeld kommen.
-	asym->Add(asymO, -1.0);
+  diff->Add(odiff,-1);
+  sum->Add(osum,1);
+	TH1D *asym = (TH1D*) diff->Clone();
+	asym->SetNameTitle("asym", "Asymmetrie im Zerfall");
+	asym->Divide(sum);
 
 	// Jetzt wird gefittet
 	cout << endl << string(72, '*') << endl << asymO->GetTitle() <<
