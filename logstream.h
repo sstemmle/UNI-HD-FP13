@@ -48,7 +48,7 @@ namespace logstreams {
 	    // no higher than 2 (see below), i.e. a logstream will only
 	    // produce output when its log level is greater or equal the global
 	    // log level
-	    // 
+	    //
 	    // don't use get excessively, rather keep your reference to the
 	    // logstream until you don't need it any longer, because the
 	    // get operation is not cheap
@@ -179,7 +179,7 @@ namespace logstreams {
 	    {
 	    public:
 		inline bool operator() (const StreamMapKey& a,
-			const StreamMapKey& b)
+			const StreamMapKey& b) const
 		{
 		    if (a.stream < b.stream) return true;
 		    else if (b.stream < a.stream) return false;
@@ -203,12 +203,12 @@ namespace logstreams {
 	    // management for the streams map
 	    static void registerStream(logstream* log);
 	    static void unregisterStream(logstream* log, bool doDelete);
-	    
+
 	    // deleter for map-style iterators containing pointers...
 	    template<typename K, typename T>
 	    struct deleter :
 		public std::unary_function<const std::pair<K, T*>&, void> {
-		void operator()(const std::pair<K,T*>& ptr)
+		void operator()(const std::pair<K,T*>& ptr) const
 		{ delete ptr.second; }
 	    };
     };
