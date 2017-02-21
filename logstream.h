@@ -208,7 +208,7 @@ namespace logstreams {
 	    template<typename K, typename T>
 	    struct deleter :
 		public std::unary_function<const std::pair<K, T*>&, void> {
-		void operator()(const std::pair<K,T*>& ptr) const
+		void operator()(const std::pair<K,T*>& ptr)
 		{ delete ptr.second; }
 	    };
     };
