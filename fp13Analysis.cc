@@ -182,7 +182,7 @@ int fp13Analysis::readEvent()
 					delay << " deltaData " << deltadata <<
 					"." << endl;
       //Wenn signale 40ns oder naeher zusammenliegen werden sie zusammengefuegt (endl. Zeitaufloesung)
-			if (delay <= 40){ 
+			if (delay <= 60){ 
 				detectorHitMask[detectorHitMask.size() - 2] = detectorHitMask[detectorHitMask.size() - 2] | hitMask;
 				detectorHitMask.pop_back();
 				detectorHitTimes.pop_back();
