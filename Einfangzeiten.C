@@ -79,7 +79,7 @@ TF1* setFitFunction()
 	// Startwerte fuer Parameter setzen
 	fitFunc->SetParameters(10., 5000., 2000., 800., 1.4);
 	// Verhaeltnis von pos. zu neg. Myonen festsetzen (oder auch nicht!)
-	fitFunc->FixParameter(4, 1.3);
+	fitFunc->FixParameter(4, 1.275);
 	// Farbe setzen
 	fitFunc->SetLineColor(kRed);
 
