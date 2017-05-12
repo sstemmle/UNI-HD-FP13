@@ -41,7 +41,7 @@ protected:
 	// und deren Kinder koennen auf diese Variablen zugreifen
 
 	// Anzahl der Detektorlagen
-	static const int nLayers = 8;
+	static const int nLayers = 6;
 	// Minimale Verzoegerung zwischen Zeitbins, damit Ergebnisse
 	// beruecksichtigt werden (in ns)
 	// (Detektor/Auslesekette hat Totzeit! 55 ns scheinen sinnvoll,
