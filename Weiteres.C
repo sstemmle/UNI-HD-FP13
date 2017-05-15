@@ -8,8 +8,11 @@
 #include <TColor.h>
 #include <TCanvas.h>
 
+// Anzahl der benutzten Detektorlagen
+const int nLayers = 6;
+
 ////////////////////////////////////////////////////////////////////////
-// Zeit des ersten Hits fuer alle Lagen				
+// Zeit des ersten Hits fuer alle Lagen
 ////////////////////////////////////////////////////////////////////////
 
 void canvas1(const char *filename = "fp13.root") {
@@ -17,24 +20,24 @@ void canvas1(const char *filename = "fp13.root") {
 	gStyle->SetOptStat("nem");
 
 	////////////////////////////////////////////////////////////////
-	// Laden der Histogramme					
+	// Laden der Histogramme
 	////////////////////////////////////////////////////////////////
 
 	TFile *f = new TFile(filename);
 
-	TH1D *z[8];
-	for (int i = 0; i < 8; ++i)
+	TH1D *z[nLayers];
+	for (int i = 0; i < nLayers; ++i)
 		z[i] = (TH1D*) f->Get(Form("z%d", i));
 	////////////////////////////////////////////////////////////////
-	// Histogramme zeichnen						
+	// Histogramme zeichnen
 	////////////////////////////////////////////////////////////////
 
 	TCanvas *c1 = new TCanvas("c1");
 
 	c1->Clear();
 	c1->Divide(2,4);
-	
-	for (int i = 0; i < 8; ++i) {
+
+	for (int i = 0; i < nLayers; ++i) {
 		c1->cd(i + 1);
 		z[i]->Draw();
 		z[i]->SetFillColor(kBlue);
@@ -42,7 +45,7 @@ void canvas1(const char *filename = "fp13.root") {
 }
 
 ////////////////////////////////////////////////////////////////////////
-// Nachpulse pro Detektor					
+// Nachpulse pro Detektor
 ////////////////////////////////////////////////////////////////////////
 
 void canvas2(const char *filename = "fp13.root") {
@@ -50,17 +53,17 @@ void canvas2(const char *filename = "fp13.root") {
 	gStyle->SetOptStat("en");
 
 	////////////////////////////////////////////////////////////////
-	// Laden der Histogramme					
+	// Laden der Histogramme
 	////////////////////////////////////////////////////////////////
 
 	TFile *f = new TFile(filename);
 
-	TH1D *x[8];
-	for (int i = 0; i < 8; ++i)
+	TH1D *x[nLayers];
+	for (int i = 0; i < nLayers; ++i)
 		x[i] = (TH1D*) f->Get(Form("x%d", i));
 
 	////////////////////////////////////////////////////////////////
-	// Histogramme zeichnen						
+	// Histogramme zeichnen
 	////////////////////////////////////////////////////////////////
 
 	TCanvas *c2 = new TCanvas("c2");
@@ -68,7 +71,7 @@ void canvas2(const char *filename = "fp13.root") {
 	c2->Clear();
 	c2->Divide(2,4);
 
-	for (int i = 1; i < 8; ++i) {
+	for (int i = 1; i < nLayers; ++i) {
 		c2->cd(i + 1);
 		gPad->SetLogy();
 		x[i]->Draw();
@@ -85,18 +88,18 @@ void canvas3(const char *filename = "fp13.root") {
 	gStyle->SetOptStat("en");
 
 	////////////////////////////////////////////////////////////////
-	// Laden der Histogramme					
+	// Laden der Histogramme
 	////////////////////////////////////////////////////////////////
 
 	TFile *f = new TFile(filename);
 
-	TH1D *h1 = (TH1D*)f->Get("h1");			      
+	TH1D *h1 = (TH1D*)f->Get("h1");
 	TH1D *h2 = (TH1D*)f->Get("h2");
-	TH1D *h6 = (TH1D*)f->Get("h6");  
+	TH1D *h6 = (TH1D*)f->Get("h6");
 	TH1D *h8 = (TH1D*)f->Get("h8");
 
 	////////////////////////////////////////////////////////////////
-	// Histogramme zeichnen						
+	// Histogramme zeichnen
 	////////////////////////////////////////////////////////////////
 
 	TCanvas *c3 = new TCanvas("c3");
@@ -104,25 +107,25 @@ void canvas3(const char *filename = "fp13.root") {
 	c3->Clear();
 	c3->Divide(2,2);
 
-	c3->cd(1);						   
+	c3->cd(1);
 	h1->Draw("hist");
 	h1->SetFillColor(kBlue);
 
-	c3->cd(2);						   
+	c3->cd(2);
 	h6->Draw("hist");
 	h6->SetFillColor(kBlue);
 
-	c3->cd(3);						   
+	c3->cd(3);
 	h2->Draw("hist");
 	h2->SetFillColor(kBlue);
 
-	c3->cd(4);						   
+	c3->cd(4);
 	h8->Draw("hist");
 	h8->SetFillColor(kBlue);
 }
 
 ////////////////////////////////////////////////////////////////////////
-// Zerfall nach oben pro Lage					
+// Zerfall nach oben pro Lage
 ////////////////////////////////////////////////////////////////////////
 
 void canvas4(const char *filename = "fp13.root") {
@@ -130,17 +133,17 @@ void canvas4(const char *filename = "fp13.root") {
 	gStyle->SetOptStat("en");
 
 	////////////////////////////////////////////////////////////////
-	// Laden der Histogramme					
+	// Laden der Histogramme
 	////////////////////////////////////////////////////////////////
 
 	TFile *f = new TFile(filename);
 
-	TH1D *a[8];
-	for (int i = 1; i < 7; ++i)
+	TH1D *a[nLayers];
+	for (int i = 1; i < nLayers-1; ++i)
 		a[i] = (TH1D*) f->Get(Form("a%d", i));
 
 	////////////////////////////////////////////////////////////////
-	// Histogramme zeichnen						
+	// Histogramme zeichnen
 	////////////////////////////////////////////////////////////////
 
 	TCanvas *c4 = new TCanvas("c4");
@@ -148,7 +151,7 @@ void canvas4(const char *filename = "fp13.root") {
 	c4->Clear();
 	c4->Divide(2,3);
 
-	for (int i = 1; i < 7; ++i) {
+	for (int i = 1; i < nLayers-1; ++i) {
 		c4->cd(i);
 		a[i]->Draw();
 		a[i]->SetFillColor(kBlue);
@@ -156,7 +159,7 @@ void canvas4(const char *filename = "fp13.root") {
 }
 
 ////////////////////////////////////////////////////////////////////////
-// Zerfall nach unten pro Lage					
+// Zerfall nach unten pro Lage
 ////////////////////////////////////////////////////////////////////////
 
 void canvas5(const char *filename = "fp13.root") {
@@ -164,17 +167,17 @@ void canvas5(const char *filename = "fp13.root") {
 	gStyle->SetOptStat("en");
 
 	////////////////////////////////////////////////////////////////
-	// Laden der Histogramme					
+	// Laden der Histogramme
 	////////////////////////////////////////////////////////////////
 
 	TFile *f = new TFile(filename);
 
-	TH1D *b[8];
-	for (int i = 1; i < 7; ++i)
+	TH1D *b[nLayers];
+	for (int i = 1; i < nLayers-1; ++i)
 		b[i] = (TH1D*) f->Get(Form("b%d", i));
 
 	////////////////////////////////////////////////////////////////
-	// Histogramme zeichnen						
+	// Histogramme zeichnen
 	////////////////////////////////////////////////////////////////
 
 	TCanvas *c5 = new TCanvas("c5");
@@ -182,7 +185,7 @@ void canvas5(const char *filename = "fp13.root") {
 	c5->Clear();
 	c5->Divide(2,3);
 
-	for (int i = 1; i < 7; ++i) {
+	for (int i = 1; i < nLayers-1; ++i) {
 		c5->cd(i);
 		b[i]->Draw();
 		b[i]->SetFillColor(kBlue);
@@ -198,7 +201,7 @@ void canvas6(const char *filename = "fp13.root") {
 	gStyle->SetOptStat("nem");
 
 	////////////////////////////////////////////////////////////////
-	// Laden der Histogramme					
+	// Laden der Histogramme
 	////////////////////////////////////////////////////////////////
 
 	TFile *f = new TFile(filename);
@@ -207,7 +210,7 @@ void canvas6(const char *filename = "fp13.root") {
 	TH1D *h4 = (TH1D*)f->Get("h4");
 
 	////////////////////////////////////////////////////////////////
-	// Histogramme zeichnen						
+	// Histogramme zeichnen
 	////////////////////////////////////////////////////////////////
 
 	TCanvas *c6 = new TCanvas("c6");
@@ -225,7 +228,7 @@ void canvas6(const char *filename = "fp13.root") {
 }
 
 ////////////////////////////////////////////////////////////////////////
-// Nachpulse2 pro Detektor					
+// Nachpulse2 pro Detektor
 ////////////////////////////////////////////////////////////////////////
 
 void canvas7(const char *filename = "fp13.root") {
@@ -233,17 +236,17 @@ void canvas7(const char *filename = "fp13.root") {
 	gStyle->SetOptStat("ni");
 
 	////////////////////////////////////////////////////////////////
-	// Laden der Histogramme					
+	// Laden der Histogramme
 	////////////////////////////////////////////////////////////////
 
 	TFile *f = new TFile(filename);
 
-	TH1D *w[8];
-	for (int i = 0; i < 8; ++i)
+	TH1D *w[nLayers];
+	for (int i = 0; i < nLayers; ++i)
 		w[i] = (TH1D*) f->Get(Form("z%d", i));
 
 	////////////////////////////////////////////////////////////////
-	// Histogramme zeichnen						
+	// Histogramme zeichnen
 	////////////////////////////////////////////////////////////////
 
 	TCanvas *c7 = new TCanvas("c7");
@@ -251,7 +254,7 @@ void canvas7(const char *filename = "fp13.root") {
 	c7->Clear();
 	c7->Divide(2,4);
 
-	for (int i = 0; i < 8; ++i) {
+	for (int i = 0; i < nLayers; ++i) {
 		c7->cd(i + 1);
 		w[i]->Draw();
 		w[i]->SetFillColor(kBlue);
