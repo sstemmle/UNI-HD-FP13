@@ -109,10 +109,10 @@ void Einfangzeiten(double xmin = 300., double xmax = 20000.,
 	////////////////////////////////////////////////////////////////
 	// Histogramme einlesen
 	////////////////////////////////////////////////////////////////
-	TH1D *h8 = (TH1D*)f->Get("h8");  
+	TH1D *h8 = (TH1D*)f->Get("h8");
 
-	TH1D *a[8], *b[8], *x[8];
-	for (int i = 0; i < 8; ++i) {
+	TH1D *a[nLayers], *b[nLayers], *x[nLayers];
+	for (int i = 0; i < nLayers; ++i) {
 		a[i] = (TH1D*) f->Get(Form("a%d", i));
 		b[i] = (TH1D*) f->Get(Form("b%d", i));
 		x[i] = (TH1D*) f->Get(Form("x%d", i));
@@ -126,7 +126,7 @@ void Einfangzeiten(double xmin = 300., double xmax = 20000.,
 	////////////////////////////////////////////////////////////////
 	// FIXME: tragen Sie oben in getAfterpulseScaleFactor die
 	// von Ihnen berechneten Skalierungsfaktoren ein
-	for (int iLayer = 1; iLayer <= 6; ++iLayer) {
+	for (int iLayer = 1; iLayer <= nLayers-2; ++iLayer) {
 		// die skalierten Nachpulsspektren werden hier
 		// von den gemessenen Zerfallsspektren abgezogen
 		a[iLayer]->Add(x[iLayer],
@@ -139,7 +139,7 @@ void Einfangzeiten(double xmin = 300., double xmax = 20000.,
 	// Histogramme aus den verschiedenen Szintillatoren kombinieren:
 	// erst Zerfaelle nach unten/oben separat, dann beide zusammen
 	////////////////////////////////////////////////////////////////
-	
+
 	// Wir buchen zwei Histogramme mit den selben "Abmessungen" wie
 	// a[2], und setzten diese zurueck. Dann addieren wir die
 	// Szintillatoren, die wir in unserer Messung haben wollen
@@ -155,14 +155,14 @@ void Einfangzeiten(double xmin = 300., double xmax = 20000.,
 	ho->Add(a[2], 1.0);
 	ho->Add(a[3], 1.0);
 	ho->Add(a[4], 1.0);
-	ho->Add(a[5], 1.0);
-	ho->Add(a[6], 1.0);
+	//ho->Add(a[5], 1.0);
+	//ho->Add(a[6], 1.0);
 
 	hu->Add(b[2], 1.0);	// Zerfaelle nach unten
 	hu->Add(b[3], 1.0);
 	hu->Add(b[4], 1.0);
-	hu->Add(b[5], 1.0);
-	hu->Add(b[6], 1.0);
+	//hu->Add(b[5], 1.0);
+	//hu->Add(b[6], 1.0);
 
 	// jetzt Zerfaelle nach oben/unten in ein gemeinsames Histogramm
 	// kombinieren
@@ -207,7 +207,7 @@ void Einfangzeiten(double xmin = 300., double xmax = 20000.,
 	c0->Clear();
 	c0->Divide(2, 3);
 	gPad->SetLogy();
-	for (int i = 1; i < 7; ++i) {
+	for (int i = 1; i < nLayers-1; ++i) {
 		c0->cd(i);
 		gPad->SetLogy();
 		a[i]->DrawClone("e");
@@ -218,7 +218,7 @@ void Einfangzeiten(double xmin = 300., double xmax = 20000.,
 	c1->Clear();
 	c1->Divide(2,3);
 	gPad->SetLogy();
-	for (int i = 1; i < 7; ++i) {
+	for (int i = 1; i < nLayers-1; ++i) {
 		c1->cd(i);
 		gPad->SetLogy();
 		b[1 + i]->DrawClone("e");
@@ -230,7 +230,7 @@ void Einfangzeiten(double xmin = 300., double xmax = 20000.,
 	c2->Divide(2, 3);
 	gPad->SetLogy();
 
-	for (int i = 1; i < 7; ++i) {
+	for (int i = 1; i < nLayers-1; ++i) {
 		c2->cd(i);
 		gPad->SetLogy();
 		x[i]->DrawClone("e");
